@@ -1,0 +1,88 @@
+import java.util.*;
+
+
+class Colour{
+ private int numVertices;
+ private int graph[][];
+ private int []colors;
+ private int mincolor;
+ 
+ public Colour(int numVertices,int graph[][])
+ {
+ this.numVertices=numVertices;
+ this.graph=graph;
+ this.colors=new int[numVertices];
+ this.mincolor=Integer.MAX_VALUE;
+ 
+ }
+ 
+public void solve()
+{
+Arrays.fill(colors,-1);
+trycoloring(0,1);
+}
+public void trycoloring(int vertex,int numcolour)
+{
+
+if(numcolour>=mincolor)
+return ;
+
+if(vertex==numVertices){
+mincolor=numcolour;
+printSolution(numcolour);
+return;
+}
+
+for(int color=1;color<=numcolour;color++)
+{
+if(isSafe(vertex,color))
+{
+colors[vertex]=color;
+trycoloring(vertex+1,numcolour);
+colors[vertex]=-1;
+}
+}
+colors[vertex]=numcolour+1;
+trycoloring(vertex+1,numcolour+1);
+colors[vertex]=-1;
+}
+
+public boolean isSafe(int vertex,int colour)
+{
+for(int i=0;i<numVertices;i++)
+{
+if(graph[vertex][i]==1 && colors[i]==colour)
+return false;
+}
+return true;
+}
+
+
+public void printSolution(int numcolours){
+
+System.out.println("solutions found with"+numcolours+"Colours..");
+for(int i=0;i<numVertices;i++)
+{
+System.out.println("Vertex "+ i +"Colour-->"+colors[i]);
+}
+
+}
+
+public static void main(String args[]){
+Scanner sc=new Scanner(System.in);
+System.out.print("Enter the total number of Vertices");
+int n=sc.nextInt();
+int graph[][]=new int[n][n];
+System.out.println("Enter the Adjacency Matrix:");
+for(int i=0;i<n;i++)
+{
+for(int j=0;j<n;j++)
+{
+graph[i][j]=sc.nextInt();
+}
+}
+Colour co=new Colour(n,graph);
+co.solve();
+
+}
+}
