@@ -1,0 +1,91 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+
+public class Kruskal{
+
+class Edge implements Comparable<Edge>
+{
+	int src,dest,weight;
+	public int compareTo(Edge other)
+	{
+	return this.weight - other.weight;
+	}
+}	
+	public void kruskal(int[][] graph,int numVertices){
+	
+	List <Edge> edge=new ArrayList<>();
+	for(int i=0;i<numVertices;i++)
+	{
+	for(int j=i+1;j<numVertices;j++)
+	{
+	if(graph[i][j]!=0)
+	{
+	Edge edg=new Edge();
+	edg.src=i;
+	edg.dest=j;
+	edg.weight=graph[i][j];
+	edge.add(edg);
+	}
+	}
+	}
+	Collections.sort(edge);
+	
+	int parent[]=new int[numVertices];
+	for(int i=0;i<numVertices;i++)
+	{
+	parent[i]=i;
+	}
+	
+	List<Edge> mst=new ArrayList<>();
+	for(Edge edg:edge)
+	{
+	int parentsrc=find(parent,edg.src);
+	int parentdest=find(parent,edg.dest);
+	if(parentsrc!=parentdest)
+	{
+	mst.add(edg);
+	parent[parentsrc]=parentdest;
+	}
+	}
+	int sum=0;
+	System.out.println("Edges in MST:");
+	for(Edge edg:mst)
+	{
+	System.out.println(edg.src+"-"+edg.dest+":"+edg.weight);
+	sum+=edg.weight;
+	}
+        System.out.println("Minimum weight of MST: " + sum);
+	}
+	public int find(int []parent,int i)
+	{
+	if(parent[i]!=i)
+	{
+	parent[i]=find(parent,parent[i]);
+	}
+	return parent[i];
+	}
+	
+	public static void main(String args[])
+	{
+	
+	Scanner sc=new Scanner(System.in); 
+	System.out.print("Enter the number of vertices :");
+	int n=sc.nextInt();
+	int graph[][]=new int[n][n];
+	for(int i=0;i<n;i++)
+	{
+	for(int j=0;j<n;j++)
+	{
+	System.out.print("Enter weight of "+i+"->"+j+"of graph:");
+	graph[i][j]=sc.nextInt();
+	}
+	}
+	Kruskal kru=new Kruskal();
+	kru.kruskal(graph,n);
+	
+	}
+
+
+}
